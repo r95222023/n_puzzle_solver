@@ -1,4 +1,3 @@
-import sys
 import math as math
 import time
 import resource
