@@ -6,7 +6,7 @@ fifteen_puzzle = NPuzzle().iddfs
 fifteen_puzzle.engage([1, 0, 2, 4, 5, 7, 3, 8, 9, 6, 11, 12, 13, 10, 14, 15])
 #ramdom puzzle
 print("Random Puzzle:")
-random_puzzle = fifteen_puzzle.gen_puzzle(4, 60)
+random_puzzle = fifteen_puzzle.gen_puzzle(4, 30)
 fifteen_puzzle.engage(random_puzzle)
 
 

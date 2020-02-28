@@ -94,6 +94,20 @@ def get_children(state):
     return children
 
 
+def get_move(state, direction):
+    """Get new state from current state by moving empty space in a direction"""
+    side_size = int(math.sqrt(len(state)))
+    pos = state.index(0)
+    row = pos // side_size
+    col = pos % side_size
+    moves = get_moves(side_size, col, row)
+    new_state = state
+    if direction in moves:
+        if moves[direction]['is_movable']:
+            new_state = move(state, pos, moves[direction]['rel_pos'])
+    return new_state
+
+
 def read_move(steps):
     """Convert steps to human readable moves"""
     res = []
@@ -114,30 +128,6 @@ def read_move(steps):
             direction = 'down'
         res.append(direction)
     return res
-
-
-def id_dfs(puzzle):
-    import itertools
-    goal = [i for i in range(1, len(puzzle))]+[0]
-
-    for depth in itertools.count():
-        route = dfs([puzzle], goal, depth)
-        if route:
-            return route
-
-
-def dfs(route, goal, depth):
-    if depth == 0:
-        return
-    if route[-1] == goal:
-        # print('Memory Usage: {} bytes'.format(sys.getsizeof(
-        #     route)))  # https://www.pluralsight.com/blog/tutorials/how-to-profile-memory-usage-in-python
-        return route
-    for child_node in get_children(route[-1]):
-        if child_node not in route:
-            next_route = dfs(route + [child_node], goal, depth - 1)
-            if next_route:
-                return next_route
 
 
 def gen_puzzle(n, steps=25):
@@ -168,22 +158,49 @@ def gen_puzzle(n, steps=25):
 
 class Iddfs:
     """Class for Iddfs"""
-    def __init__(self):
+    def __init__(self, **kargs):
         # It can take different history for parallel computation.
         # Ex: {'[1,0,2,3,4,5,6,7,8]':'[0,1,2,3,4,5,6,7,8]','[3,1,2,0,4,5,6,7,8]':'[0,1,2,3,4,5,6,7,8]'}
         # for two cores machine
-
+        # self.show_nodes = True if ("show_nodes" in kargs) else False
         self.get_children = get_children
-        self.dfs = dfs
+        self.nodes = 0
+        self.get_move = get_move
         self.gen_puzzle = gen_puzzle
+
+    def id_dfs(self, puzzle):
+        import itertools
+        goal = [i for i in range(1, len(puzzle))] + [0]
+
+        for depth in itertools.count():
+            route = self.dfs([puzzle], goal, depth)
+            if route:
+                return route
+
+    def dfs(self, route, goal, depth):
+        self.nodes = self.nodes + 1
+        if depth == 0:
+            return
+        if route[-1] == goal:
+            # print('Memory Usage: {} bytes'.format(sys.getsizeof(
+            #     route)))  # https://www.pluralsight.com/blog/tutorials/how-to-profile-memory-usage-in-python
+            return route
+        for child_node in get_children(route[-1]):
+            if child_node not in route:
+                next_route = self.dfs(route + [child_node], goal, depth - 1)
+                if next_route:
+                    return next_route
 
     def engage(self, puzzle):
         print("Puzzle: %s" % puzzle)
+        self.nodes = 0
         start_time = time.time()
         start_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        route = id_dfs(puzzle)
+        route = self.id_dfs(puzzle)
+        end_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         print("Solution: %s" % read_move(route))
+        print("Number of Nodes expanded: %s" % self.nodes)
         print("Time taken: %s seconds " % (time.time() - start_time))
-        print("Total Memory used: %s bytes " % (resource.getrusage(resource.RUSAGE_SELF).ru_maxrss - start_mem))
+        print("Total Memory used: %s bytes " % (end_mem - start_mem))
 
 
