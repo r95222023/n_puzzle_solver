@@ -120,7 +120,7 @@ def trace_back(state):
     else:
         previous = False
     i = 0
-    while previous and i < 10:
+    while previous:
         i = i + 1
         steps.append(previous)
         if previous in history:
@@ -177,7 +177,7 @@ def breadth_search(states):
     return res if ('Steps' in res) else children
 
 
-def engage(state):
+def solve(state):
     """engage the computation with 'state' as the initial state"""
     start_time = time.time()
     history[get_state_id(state)] = False
@@ -206,6 +206,6 @@ class Bfs:
         self.is_solvable = is_solvable
         self.get_children = get_children
         self.breadth_search = breadth_search
-        self.engage = engage
+        self.solve = solve
 
 

@@ -1,6 +1,6 @@
 import math as math
 import time
-import resource
+# import resource
 history = {}
 # history record every explored state with key equal to state id and value equal to the previous state id of that state.
 # It is used for both hashing and rebuilding entire solunjtion.
@@ -132,7 +132,7 @@ def read_move(steps):
 def gen_puzzle(n, steps=25):
     import random
     puzzle = list(range(1, n*n)) + [0]
-    for steps in range(steps):
+    for step in range(steps):
         puzzle = random.choice(get_children(puzzle))
 
     return puzzle
@@ -190,7 +190,7 @@ class Iddfs:
                 if next_route:
                     return next_route
 
-    def engage(self, puzzle):
+    def solve(self, puzzle):
         print("Puzzle: %s" % puzzle)
         self.nodes = 0
         start_time = time.time()

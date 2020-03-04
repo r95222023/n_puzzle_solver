@@ -1,5 +1,7 @@
 import math as math
 from NPuzzle import NPuzzle
+from Node import Node
+from Heuristic_function import ManhattanDistance, MisplacementTiles
 import os
 
 # print(random_puzzle)
@@ -18,33 +20,35 @@ def render(state):
 # ['down', 'down', 'left', 'left', 'left', 'up', 'right', 'down', 'right', 'right']
 
 
-def play(state):
+def play(heuristic):
     command = ""
-    new_state = state
+    npuzzle = NPuzzle()
+    new_state = npuzzle.gen_puzzle(4, 30)
+
     while not command == "exit":
+        node = Node(new_state, None, 0)
         os.system('cls' if os.name == 'nt' else 'clear')
         if command == 'new':
-            new_state = npuzzle.gen_puzzle(4, 10)
+            new_state = npuzzle.gen_puzzle(4, 30)
         # print(draw(random_puzzle))
         if command == 'u':
-            new_state = npuzzle.get_move(new_state, 'up')
+            new_state = node.get_move('up').get_state()
         if command == 'd':
-            new_state = npuzzle.get_move(new_state, 'down')
+            new_state = node.get_move('down').get_state()
         if command == 'l':
-            new_state = npuzzle.get_move(new_state, 'left')
+            new_state = node.get_move('left').get_state()
         if command == 'r':
-            new_state = npuzzle.get_move(new_state, 'right')
+            new_state = node.get_move('right').get_state()
 
         print(render(new_state))
 
         if command == 'solve':
-            npuzzle.engage(new_state)
+            print(npuzzle.AStar(heuristic).solve(new_state))
 
         command = input("Enter 'u','d','l','r' to move 0 to the up, down, left right "
                         "correspondly, 'new' to create a new puzzle, 'solve' to get the solution, 'exit' to end the program.\n>>")
 
 
-npuzzle = NPuzzle().iddfs
-random_puzzle = npuzzle.gen_puzzle(4, 10)
-play(random_puzzle)
+
+play(ManhattanDistance())
 

@@ -1,4 +1,4 @@
-from iddfs import Iddfs
+from Iddfs import Iddfs
 from NPuzzle import NPuzzle
 #example
 print("Example:")
