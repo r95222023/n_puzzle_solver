@@ -40,7 +40,6 @@ def get_moves(side_size, col, row):
     }
 
 
-
 class Node:
     """
     A node is a position (immutable) in the puzzle
@@ -134,6 +133,7 @@ class Node:
 
         return children
 
+
 class NodePool:
     """
     Contains list of Nodes used by A* algorithm.
@@ -145,6 +145,9 @@ class NodePool:
     def __init__(self):
         self._pool = []
         self._history = {}
+
+    def get_history(self):
+        return self._history
 
     def add(self, node, prev_node):
         """

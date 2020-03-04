@@ -36,11 +36,11 @@ class MisplacementTiles:
         score = 0
         size = node.get_size()
         size_square = size**2
-        for value in range(1, size_square - 1):
+        for value in range(1, size_square):
             goal_row = value // size
             goal_col = value % size
             actual_row, actual_col = node.get_coord_by_value(value)
-            if goal_col != actual_col | goal_row != actual_row:
+            if goal_col != actual_col or goal_row != actual_row:
                 score += 1
         if (size_square - 1) != node.get_state().index(0):
             score += 1

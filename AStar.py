@@ -1,4 +1,6 @@
 from Node import Node, NodePool
+import time
+
 
 class AStar:
     """
@@ -17,15 +19,15 @@ class AStar:
         """
         node = Node(puzzle, self._heuristic, 0)
         self._node_pool.add(node, node)
-        #Create the initial Node from the given position.
-        #Add the initial node to the pool.
+        # Create the initial Node from the given position.
+        # Add the initial node to the pool.
         while not self._node_pool.is_empty():
             # Pop best node from priority queue
             current_node = self._node_pool.pop()
             if current_node.get_h_score() == 0:
                 # Solution found!
-                steps = self._node_pool.trace_back(current_node)
-                return self._node_pool.read_move(steps)
+                route = self._node_pool.trace_back(current_node)
+                return {'route': route, 'steps': self._node_pool.read_move(route), 'nodes': len(self._node_pool.get_history())}
             # Compute child nodes and add them to the queue
             children = current_node.get_children()
             for child in children:

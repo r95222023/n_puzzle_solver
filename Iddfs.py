@@ -1,5 +1,5 @@
 import math as math
-import time
+# import time
 # import resource
 history = {}
 # history record every explored state with key equal to state id and value equal to the previous state id of that state.
@@ -193,13 +193,13 @@ class Iddfs:
     def solve(self, puzzle):
         print("Puzzle: %s" % puzzle)
         self.nodes = 0
-        start_time = time.time()
-        start_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        # start_time = time.time()
+        # start_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         route = self.id_dfs(puzzle)
-        end_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        print("Solution: %s" % read_move(route))
-        print("Number of Nodes expanded: %s" % self.nodes)
-        print("Time taken: %s seconds " % (time.time() - start_time))
-        print("Total Memory used: %s bytes " % (end_mem - start_mem))
-
+        # end_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        # print("Solution: %s" % read_move(route))
+        # print("Number of Nodes expanded: %s" % self.nodes)
+        # print("Time taken: %s seconds " % (time.time() - start_time))
+        # print("Total Memory used: %s bytes " % (end_mem - start_mem))
+        return {'route': route, 'steps': read_move(route), 'nodes': self.nodes}
 
