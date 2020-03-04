@@ -9,27 +9,43 @@ import os
 
 def render(state):
     size = int(math.sqrt(len(state)))
-    res_str = "\n    ---------------------\n    |"
+    top_line ="\n    "
+    bottom_line="\n    "
+    for i in range(0, size):
+        top_line += "-----"
+        bottom_line += "-----"
+    top_line += "-\n    |"
+    bottom_line += "-\n"
+    res_str = top_line
     for i in range(0, len(state)):
         num = state[i]
         res_str = res_str + ("  " if num < 10 else " ") + str(num) \
-                  + " |" + ("\n    ---------------------\n    |" if (i + 1) % size == 0 and (i != len(state)-1) else "")
-    res_str = res_str + "\n    ---------------------\n"
+                  + " |" + (top_line if (i + 1) % size == 0 and (i != len(state)-1) else "")
+    res_str = res_str + bottom_line
     return res_str
 
 # ['down', 'down', 'left', 'left', 'left', 'up', 'right', 'down', 'right', 'right']
 
 
-def play(heuristic):
+def play(size, heuristic):
     command = ""
+    subcommand =""
+    _size = size
     npuzzle = NPuzzle()
-    new_state = npuzzle.gen_puzzle(4, 30)
+    new_state = npuzzle.gen_puzzle(_size, 30)
 
     while not command == "exit":
         node = Node(new_state, None, 0)
         os.system('cls' if os.name == 'nt' else 'clear')
         if command == 'new':
-            new_state = npuzzle.gen_puzzle(4, 30)
+            new_state = npuzzle.gen_puzzle(_size, 30)
+        if command == 'size':
+            while not (type(subcommand)== int and subcommand > 0):
+                subcommand = input("Size=?")
+                subcommand = int(subcommand)
+                _size = subcommand
+                new_state = npuzzle.gen_puzzle(_size, 30)
+
         # print(draw(random_puzzle))
         if command == 'u':
             new_state = node.get_move('up').get_state()
@@ -44,11 +60,14 @@ def play(heuristic):
 
         if command == 'solve':
             print(npuzzle.AStar(heuristic).solve(new_state))
-
+        if Node(new_state, heuristic, 0).get_h_score()==0:
+            print("Congratulation! You solved the puzzle!")
+        subcommand = ""
         command = input("Enter 'u','d','l','r' to move 0 to the up, down, left right "
-                        "correspondly, 'new' to create a new puzzle, 'solve' to get the solution, 'exit' to end the program.\n>>")
+                        "correspondingly, 'new' to create a new puzzle, 'solve' to get the solution, "
+                        "'size' to change size, 'exit' to end the program.\n>>")
 
 
 
-play(ManhattanDistance())
+play(4, ManhattanDistance())
 
