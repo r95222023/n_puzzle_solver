@@ -1,23 +1,42 @@
 # n-puzzle solver
-Use Breadth-first search algorithm or Iterative deepening depth-first search to find the solution of an n-puzzle games.
+Use different search algorithm to solve the n-puzzle (8-, 15-puzzle etc...) games.
 
 - **Source code:** https://github.com/r95222023/n_puzzle_solver
 
 It provides:
 
-- a brute force Breadth-first search algorithm for n-puzzle games (8-puzzle, 15-puzzle etc)
-- Iterative deepening depth-first search which saves memory
-- solvable check
+- Breadth-first search
+- Iterative deepening depth-first search
+- A* search with Manhattan Distance and Misplacement Tiles heuristic functions 
+- Command line interface that allows user to play the n puzzle game and solve the 
+  puzzle with different search algorithm
 
 
 Usage:
-For Python, simply import from the file and initialize the class with a history or an empty dict.
-Then run engage method to compute.
+Import the NPuzzle class and use solve method. For example, 
 
     from NPuzzle import NPuzzle
-    fifteen_puzzle = NPuzzle().iddfs # for Breadth-first serch use NPuzzle().bfs
-    fifteen_puzzle.engage([1, 0, 2, 4, 5, 7, 3, 8, 9, 6, 11, 12, 13, 10, 14, 15])
+    from HeuristicFunction import ManhattanDistance, MisplacementTiles
+
+    puzzle = [1, 0, 2, 4, 5, 7, 3, 8, 9, 6, 11, 12, 13, 10, 14, 15]
+    n_puzzle = NPuzzle()
     
-tests can then be run after installation of Python with:
+    # for A* Search
+    bfs = n_puzzle.AStar(ManhattanDistance())
+    bfs.solve(puzzle)
+    
+    # for Iterative Deepening Depth-First Search
+    iddfs = n_puzzle.Iddfs()
+    iddfs.solve(puzzle)
+    
+    # for Breadth-First Search
+    bfs = n_puzzle.Bfs()
+    bfs.solve(puzzle)
+    
+To play the n-puzzle game, simply run
+
+    python play.py
+    
+Tests can be run with:
 
     python run.py

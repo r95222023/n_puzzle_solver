@@ -2,7 +2,7 @@ import math as math
 import time
 from NPuzzle import NPuzzle
 from Node import Node
-from Heuristic_function import ManhattanDistance, MisplacementTiles
+from HeuristicFunction import ManhattanDistance, MisplacementTiles
 import os
 
 # print(random_puzzle)
