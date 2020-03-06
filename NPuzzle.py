@@ -6,7 +6,7 @@ import random
 
 
 class NPuzzle:
-    """Class for Iddfs"""
+    """Wrapper for all n-puzzle solver algorithm"""
     def __init__(self):
         # It can take different history for parallel computation.
         # Ex: {'[1,0,2,3,4,5,6,7,8]':'[0,1,2,3,4,5,6,7,8]','[3,1,2,0,4,5,6,7,8]':'[0,1,2,3,4,5,6,7,8]'}

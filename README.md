@@ -22,8 +22,8 @@ Import the NPuzzle class and use solve method. For example,
     n_puzzle = NPuzzle()
     
     # for A* Search
-    bfs = n_puzzle.AStar(ManhattanDistance())
-    bfs.solve(puzzle)
+    astar = n_puzzle.AStar(ManhattanDistance())
+    astar.solve(puzzle)
     
     # for Iterative Deepening Depth-First Search
     iddfs = n_puzzle.Iddfs()
@@ -33,10 +33,10 @@ Import the NPuzzle class and use solve method. For example,
     bfs = n_puzzle.Bfs()
     bfs.solve(puzzle)
     
-To play the n-puzzle game, simply run
-
-    python play.py
-    
 Tests can be run with:
 
     python run.py
+    
+To play the n-puzzle game, simply run
+
+    python play.py

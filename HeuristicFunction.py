@@ -17,7 +17,7 @@ class ManhattanDistance:
             goal_col = value % size
             actual_row, actual_col = node.get_coord_by_value(value)
             score += abs(goal_row - actual_row) + abs(goal_col - actual_col)
-        score += abs(size_square-1 - node.get_state().index(0))
+        # score += abs(size_square-1 - node.get_state().index(0))
         return score
 
 

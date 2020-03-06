@@ -1,5 +1,4 @@
 from Node import Node, NodePool
-import time
 
 
 class AStar:
@@ -13,8 +12,8 @@ class AStar:
 
     def solve(self, puzzle):
         """
-        Solve the given starting position and
-        return the list of moves.
+        Solve the given starting puzzle and
+        return the {route, steps, nodes}.
         Return None if no solution has been found.
         """
         node = Node(puzzle, self._heuristic, 0)
