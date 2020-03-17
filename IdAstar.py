@@ -1,4 +1,5 @@
 from Node import Node, NodePool
+from HeuristicFunction import ManhattanDistance, MisplacementTiles
 import math
 
 
@@ -7,7 +8,7 @@ class IdAStar:
     Python implementation of Iterative deepening A* algorithm
     """
 
-    def __init__(self, heuristic):
+    def __init__(self, heuristic=ManhattanDistance()):
         self._node_expanded = 0
         self._heuristic = heuristic
 

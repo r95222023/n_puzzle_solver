@@ -8,8 +8,8 @@ puzzle = [1, 3, 6, 4, 9, 5, 2, 7, 0, 10, 11, 12, 13, 14, 8, 15]
 n_puzzle = NPuzzle()
 
 # for A* Search
-id_a_star_md = n_puzzle.IdAStar(ManhattanDistance())
-id_a_star_mt = n_puzzle.IdAStar(MisplacementTiles())
+id_a_star_md = n_puzzle.IdAStar(heuristic=ManhattanDistance())
+id_a_star_mt = n_puzzle.IdAStar(heuristic=MisplacementTiles())
 
 # example
 

@@ -33,6 +33,7 @@ def play(size):
     subcommand =""
     _size = size
     _heuristic = ManhattanDistance()
+    _algorithm = 'IdAStar'
     npuzzle = NPuzzle()
     new_state = npuzzle.gen_puzzle(_size, 30)
 
@@ -57,6 +58,17 @@ def play(size):
                 if subcommand == 2:
                     _heuristic = MisplacementTiles()
 
+        if command == 'algorithm':
+            while not (type(subcommand) == int and subcommand > 0):
+                subcommand = input("Choose algorithm. 1) IDA*, 2) A*, 3) Iddfs >>")
+                subcommand = int(subcommand)
+                if subcommand == 1:
+                    _algorithm = 'IdAStar'
+                if subcommand == 2:
+                    _algorithm = 'AStar'
+                if subcommand == 3:
+                    _algorithm = 'Iddfs'
+
         # print(draw(random_puzzle))
         if command == 'u':
             new_state = node.get_move('up').get_state()
@@ -71,7 +83,8 @@ def play(size):
 
         if command == 'solve':
             start_time = time.time()
-            solution = npuzzle.IdAStar(_heuristic).solve(new_state)
+            solver = npuzzle.__dict__[_algorithm]
+            solution = solver(heuristic=_heuristic).solve(new_state)
             print('Solution:', solution['steps'])
             print('Number of nodes expanded: ', solution['nodes'])
             print('Time taken: ', time.time() - start_time, ' seconds')
@@ -80,7 +93,8 @@ def play(size):
         subcommand = ""
         command = input("Enter 'u','d','l','r' to move 0 to the up, down, left right "
                         "correspondingly, 'new' to create a new puzzle, 'solve' to get the solution, "
-                        "'size' to change size, 'heuristic' to select heuristic function, 'exit' to end the program.\n>>")
+                        "'size' to change size, \n 'algorithm' to select algorithm,  "
+                        "'heuristic' to select heuristic function, 'exit' to end the program.\n>>")
 
 
 class CLInterface:
