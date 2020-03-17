@@ -1,6 +1,7 @@
 from Iddfs import Iddfs
 from Bfs import Bfs
 from AStar import AStar
+from IdAstar import IdAStar
 from Node import Node
 import random
 
@@ -14,6 +15,7 @@ class NPuzzle:
         self.AStar = AStar
         self.Bfs = Bfs
         self.Iddfs = Iddfs
+        self.IdAStar = IdAStar
 
     def gen_puzzle(self, n, steps=25):
         puzzle = list(range(1, n * n)) + [0]

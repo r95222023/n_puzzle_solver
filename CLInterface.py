@@ -71,7 +71,7 @@ def play(size):
 
         if command == 'solve':
             start_time = time.time()
-            solution = npuzzle.AStar(_heuristic).solve(new_state)
+            solution = npuzzle.IdAStar(_heuristic).solve(new_state)
             print('Solution:', solution['steps'])
             print('Number of nodes expanded: ', solution['nodes'])
             print('Time taken: ', time.time() - start_time, ' seconds')

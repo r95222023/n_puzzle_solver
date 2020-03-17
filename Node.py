@@ -142,9 +142,14 @@ class NodePool:
     designed especially to solve 15-puzzle problems
     """
 
-    def __init__(self):
+    def __init__(self, pool_list=[]):
         self._pool = []
         self._history = {}
+        prev_node = False
+
+        for node in pool_list:
+            self.add(node, prev_node)
+            prev_node = node
 
     def get_history(self):
         return self._history
@@ -159,10 +164,10 @@ class NodePool:
             # duplicate entry
             return
 
-        if node != prev_node:
-            self._history[state_id] = prev_node.get_state_id()
-        else:
+        if type(prev_node) == bool:
             self._history[state_id] = False
+        else:
+            self._history[state_id] = prev_node.get_state_id()
         self._insort(node)
 
     def pop(self):

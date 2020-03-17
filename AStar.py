@@ -17,7 +17,7 @@ class AStar:
         Return None if no solution has been found.
         """
         node = Node(puzzle, self._heuristic, 0)
-        self._node_pool.add(node, node)
+        self._node_pool.add(node, False)
         # Create the initial Node from the given position.
         # Add the initial node to the pool.
         while not self._node_pool.is_empty():
