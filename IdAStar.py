@@ -1,5 +1,5 @@
 from Node import Node, NodePool
-from HeuristicFunction import ManhattanDistance, MisplacementTiles
+from HeuristicFunction import ManhattanDistance
 import math
 
 
@@ -22,9 +22,10 @@ class IdAStar:
         if node.get_h_score() == 0:
             return {'path': path, 'bound': bound}
         min_t = math.inf
+        # g = g + cost for each children (see Node.py line 135)
         children = node.get_children()
-        for child in children:
-            path.append(child)
+        for child_node in children:
+            path.append(child_node)
             t = self.search(path, bound)
             if type(t) == dict:
                 return t
@@ -39,9 +40,9 @@ class IdAStar:
         return the {path, bound}.
         Return None if no solution has been found.
         """
-        node = Node(puzzle, self._heuristic, 0)
-        path = [node]
         # init node, g = 0
+        node = Node(puzzle, heuristic=self._heuristic, g_score=0)
+        path = [node]
         bound = node.get_h_score()
         # Create the initial Node from the given position.
         # Add the initial node to the pool.

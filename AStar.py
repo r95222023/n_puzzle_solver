@@ -16,7 +16,7 @@ class AStar:
         return the {route, steps, nodes}.
         Return None if no solution has been found.
         """
-        node = Node(puzzle, self._heuristic, 0)
+        node = Node(puzzle, heuristic=self._heuristic, g_score=0)
         self._node_pool.add(node, False)
         # Create the initial Node from the given position.
         # Add the initial node to the pool.
@@ -26,7 +26,8 @@ class AStar:
             if current_node.get_h_score() == 0:
                 # Solution found!
                 route = self._node_pool.trace_back(current_node)
-                return {'route': route, 'steps': self._node_pool.read_move(route), 'nodes': len(self._node_pool.get_history())}
+                return {'route': route, 'steps': self._node_pool.read_move(route),
+                        'nodes': len(self._node_pool.get_history())}
             # Compute child nodes and add them to the queue
             children = current_node.get_children()
             for child in children:

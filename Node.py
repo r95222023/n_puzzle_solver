@@ -47,15 +47,16 @@ class Node:
     the list of moves which bring us to this position
     """
 
-    def __init__(self, state, heuristic, g_score=0):
+    def __init__(self, state, heuristic={'compute': lambda x: 0}, g_score=0, cost=lambda node, next_node: 1):
         """
         Builds a new node
         """
         self._state = state
-        self._size =  int(math.sqrt(len(state)))
+        self._size = int(math.sqrt(len(state)))
         self._heuristic = heuristic
         self._h_score = None
         self._g_score = g_score
+        self._cost = cost
 
     def get_size(self):
         return self._size
@@ -116,7 +117,8 @@ class Node:
         if direction in moves:
             if moves[direction]['is_movable']:
                 new_state = move(self._state, pos, moves[direction]['rel_pos'])
-        return Node(new_state, self._heuristic, self._g_score+1)
+        return Node(new_state, heuristic=self._heuristic,
+                    g_score=self._g_score+self._cost(self._state, new_state))
 
     def get_children(self):
         """Create all possible unexplored node from current state"""
@@ -129,7 +131,8 @@ class Node:
         for direction in moves:
             if moves[direction]['is_movable']:
                 new_state = move(self._state, pos, moves[direction]['rel_pos'])
-                children.append(Node(new_state, self._heuristic, self._g_score+1))
+                children.append(Node(new_state, heuristic=self._heuristic,
+                                     g_score=self._g_score+self._cost(self._state, new_state)))
 
         return children
 
@@ -151,10 +154,13 @@ class NodePool:
             self.add(node, prev_node)
             prev_node = node
 
+    def empty_pool(self):
+        self._pool = []
+
     def get_history(self):
         return self._history
 
-    def add(self, node, prev_node):
+    def add(self, node, prev_node, sort=True):
         """
         Add new Node to the pool
         Nodes previously added will not be added again
@@ -168,7 +174,8 @@ class NodePool:
             self._history[state_id] = False
         else:
             self._history[state_id] = prev_node.get_state_id()
-        self._insort(node)
+        if sort:
+            self._insort(node)
 
     def pop(self):
         """

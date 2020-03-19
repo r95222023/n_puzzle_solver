@@ -29,29 +29,29 @@ def swap(state, from_pos, to_pos):
 #         if arr1[i] != arr2[i]:
 #             res = False
 #     return res
-
-
-def is_solvable(state):
-    """Check if the puzzle is solvable."""
-    # count the number of inversions
-    # refer to https://github.com/gliderkite/puzzle15/blob/master/puzzle15.py
-    inversions = 0
-    for i, v in [(i, v) for i, v in enumerate(state) if v != len(state)]:
-        j = i + 1
-        while j < len(state):
-            if state[j] < v:
-                inversions += 1
-            j += 1
-    # check if the puzzle is solvable
-    size = int(math.sqrt(len(state)))
-    # grid width is odd and number of inversion even -> solvable
-    if size % 2 != 0 and inversions % 2 == 0:
-        return True
-    # grid width is even
-    if size % 2 == 0:
-        emptyrow = size - state.index(0) // size
-        return (emptyrow % 2 != 0) == (inversions % 2 == 0)
-    return False
+#
+#
+# def is_solvable(state):
+#     """Check if the puzzle is solvable."""
+#     # count the number of inversions
+#     # refer to https://github.com/gliderkite/puzzle15/blob/master/puzzle15.py
+#     inversions = 0
+#     for i, v in [(i, v) for i, v in enumerate(state) if v != len(state)]:
+#         j = i + 1
+#         while j < len(state):
+#             if state[j] < v:
+#                 inversions += 1
+#             j += 1
+#     # check if the puzzle is solvable
+#     size = int(math.sqrt(len(state)))
+#     # grid width is odd and number of inversion even -> solvable
+#     if size % 2 != 0 and inversions % 2 == 0:
+#         return True
+#     # grid width is even
+#     if size % 2 == 0:
+#         emptyrow = size - state.index(0) // size
+#         return (emptyrow % 2 != 0) == (inversions % 2 == 0)
+#     return False
 
 
 def get_moves(side_size, col, row):
@@ -164,14 +164,14 @@ class Iddfs:
         # self.show_nodes = True if ("show_nodes" in kargs) else False
         self.get_children = get_children
         self.nodes = 0
-        self.get_move = get_move
-        self.gen_puzzle = gen_puzzle
+        # self.get_move = get_move
 
-    def id_dfs(self, puzzle):
+    def search(self, puzzle):
         import itertools
         goal = [i for i in range(1, len(puzzle))] + [0]
 
         for depth in itertools.count():
+            self.nodes = 0
             route = self.dfs([puzzle], goal, depth)
             if route:
                 return route
@@ -191,11 +191,10 @@ class Iddfs:
                     return next_route
 
     def solve(self, puzzle):
-        print("Puzzle: %s" % puzzle)
         self.nodes = 0
         # start_time = time.time()
         # start_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        route = self.id_dfs(puzzle)
+        route = self.search(puzzle)
         # end_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         # print("Solution: %s" % read_move(route))
         # print("Number of Nodes expanded: %s" % self.nodes)

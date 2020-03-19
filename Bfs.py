@@ -114,7 +114,7 @@ def get_children(state):
 def trace_back(state):
     """Find previous state recursively to rebuild the solution"""
     state_id = get_state_id(state)
-    steps = [state_id]
+    route = [state_id]
     if state_id in history:
         previous = history[state_id]
     else:
@@ -122,22 +122,22 @@ def trace_back(state):
     i = 0
     while previous:
         i = i + 1
-        steps.append(previous)
+        route.append(previous)
         if previous in history:
             previous = history[previous]
         else:
             previous = False
-    return steps[::-1]
+    return route[::-1]
 
 
-def read_move(steps):
-    """Convert steps to human readable moves"""
+def read_move(route):
+    """Convert route to human readable moves"""
     res = []
-    size = len(steps[0])
+    size = len(route[0])
     side_size = int(math.sqrt(size))
-    for i in range(0, len(steps)-1):
-        state = [int(j) for j in list(steps[i].replace('[', '').replace(']', '').split(', '))]
-        next_state = [int(k) for k in list(steps[i+1].replace('[', '').replace(']', '').split(', '))]
+    for i in range(0, len(route) - 1):
+        state = [int(j) for j in list(route[i].replace('[', '').replace(']', '').split(', '))]
+        next_state = [int(k) for k in list(route[i + 1].replace('[', '').replace(']', '').split(', '))]
         next_pos = next_state.index(0)
         pos = state.index(0)
         rel = next_pos-pos
@@ -152,60 +152,41 @@ def read_move(steps):
     return res
 
 
-def breadth_search(states):
-    """Breadth depth first search"""
-    cost = 0
-    res = []
-    children = []
-    for state in states:
-        cost = cost + 1
-        if compare(state):
-            print('Bingo!!')
-            # found solution!
-            steps = trace_back(state)
-            # rebuild the solution
-            print('Memory Usage: {} bytes'.format(sys.getsizeof(children))) #https://www.pluralsight.com/blog/tutorials/how-to-profile-memory-usage-in-python
-            # check memory usage for the nodes
-            res = {'Depth': len(steps)-1, 'Number of Nodes expanded': cost, 'Moves:': read_move(steps), 'Steps': trace_back(state)}
-            # final result
-            break
-            # stop searching once find the solution
-        else:
-            for child in get_children(state):
-                children.append(child)
-
-    return res if ('Steps' in res) else children
-
-
-def solve(state):
-    """engage the computation with 'state' as the initial state"""
-    start_time = time.time()
-    history[get_state_id(state)] = False
-    search = breadth_search([state])
-    if is_solvable(state) or True:
-        while not ('Steps' in search):
-            search = breadth_search(search)
-        print(search)
-        # print('Depth: {}'.format(len(search['moves'])))
-        # print('Number of Nodes expanded: {}'.format(search['cost']))
-        # print('Moves: {}'.format(search['Moves']))
-        # print('Steps: {}'.format(search['steps']))
-    else:
-        print('Warning: the given state is not solvable')
-    print("Time taken: %s seconds " % (time.time() - start_time))
-    return
-
-
 class Bfs:
     """Class for Bfs"""
-    def __init__(self, init_history):
+    def __init__(self, init_history={}, **kwargs):
         # It can take different history for parallel computation.
         # Ex: {'[1,0,2,3,4,5,6,7,8]':'[0,1,2,3,4,5,6,7,8]','[3,1,2,0,4,5,6,7,8]':'[0,1,2,3,4,5,6,7,8]'}
         # for two cores machine
-        self.history = init_history or {}
+        self.history = init_history
         self.is_solvable = is_solvable
         self.get_children = get_children
-        self.breadth_search = breadth_search
-        self.solve = solve
+
+    def solve(self, state):
+        """engage the computation with 'state' as the initial state"""
+        history[get_state_id(state)] = False
+        search = self.search([state])
+        while not type(search) == dict:
+            search = self.search(search)
+        return search
+
+    def search(self, states):
+        """Breadth depth first search"""
+        cost = 0
+        children = []
+        for state in states:
+            cost = cost + 1
+            if compare(state):
+                # found solution!
+                route = trace_back(state)
+                # rebuild the solution
+                # check memory usage for the nodes
+                # final result
+                return {'nodes': cost, 'steps': read_move(route), 'route': route}
+            else:
+                for child in get_children(state):
+                    children.append(child)
+
+        return children
 
 

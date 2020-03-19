@@ -3,6 +3,7 @@ import time
 from NPuzzle import NPuzzle
 from Node import Node
 from HeuristicFunction import ManhattanDistance, MisplacementTiles
+from Utils import memory_usage_psutil
 import os
 
 # print(random_puzzle)
@@ -60,7 +61,7 @@ def play(size):
 
         if command == 'algorithm':
             while not (type(subcommand) == int and subcommand > 0):
-                subcommand = input("Choose algorithm. 1) IDA*, 2) A*, 3) Iddfs >>")
+                subcommand = input("Choose algorithm. 1) IDA*, 2) A*, 3) Iddfs, 4) Bfs >>")
                 subcommand = int(subcommand)
                 if subcommand == 1:
                     _algorithm = 'IdAStar'
@@ -68,6 +69,8 @@ def play(size):
                     _algorithm = 'AStar'
                 if subcommand == 3:
                     _algorithm = 'Iddfs'
+                if subcommand == 4:
+                    _algorithm = 'Bfs'
 
         # print(draw(random_puzzle))
         if command == 'u':
@@ -84,10 +87,12 @@ def play(size):
         if command == 'solve':
             start_time = time.time()
             solver = npuzzle.__dict__[_algorithm]
+            start_mem = memory_usage_psutil()
             solution = solver(heuristic=_heuristic).solve(new_state)
             print('Solution:', solution['steps'])
             print('Number of nodes expanded: ', solution['nodes'])
             print('Time taken: ', time.time() - start_time, ' seconds')
+            print('Memory used: ', memory_usage_psutil() - start_mem, 'KB\n')
         if Node(new_state, _heuristic, 0).get_h_score() == 0:
             print("Congratulation! You solved the puzzle!")
         subcommand = ""
